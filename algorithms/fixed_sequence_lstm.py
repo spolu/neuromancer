@@ -152,7 +152,7 @@ class FixedSequenceLSTM:
 
             loss = self.loss(
                 predictions.view(-1, predictions.size(2)),
-                target.transpose(0, 1).view(-1),
+                target.transpose(0, 1).contiguous().view(-1),
             )
 
             loss_meter_total.update(loss.item())
@@ -227,7 +227,7 @@ class FixedSequenceLSTM:
 
             loss = self.loss(
                 predictions.view(-1, predictions.size(2)),
-                target.transpose(0, 1).view(-1),
+                target.transpose(0, 1).contiguous().view(-1),
             )
 
             loss_meter.update(loss.item())
