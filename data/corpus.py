@@ -50,6 +50,12 @@ class CorpusDictionary():
     ) -> int:
         return self._char_to_ix[c]
 
+    def ix_to_char(
+            self,
+            ix,
+    ) -> int:
+        return self._ix_to_char[ix]
+
     def input_target(
             self,
             message: str,

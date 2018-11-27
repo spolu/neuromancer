@@ -252,16 +252,14 @@ class FixedSequenceLSTM:
 
         with torch.no_grad():
             h = None
+
             if len(m) > 1:
                 (sequence, _) = self.dict.input_target(m[:-1])
                 sequence = sequence[:len(m)-1]
                 _, h = self.policy(sequence.unsqueeze(1))
+
             (c, _) = self.dict.input_target(m[-1:])
-            c = c[0]
-
-            import pdb; pdb.set_trace()
-
-            # TODO(stan): fix c, sequence is not the right legnth anymore
+            c = c[0:1]
 
             beams = [Beam(c, h, 1.0, '', False)]
 
@@ -279,7 +277,7 @@ class FixedSequenceLSTM:
 
                     for j in range(self.beam_size):
                         ix = topi[0][0][j].item()
-                        letter = self.ix_to_char[ix]
+                        letter = self.dict.ix_to_char(ix)
 
                         if letter == ' ' or ix == 0:
                             if len(beams[i].prediction) > 0:
@@ -293,7 +291,8 @@ class FixedSequenceLSTM:
                                     )
                                 ]
                         else:
-                            (c, _) = self.input_target_for_message(letter)
+                            (c, _) = self.dict.input_target(letter)
+                            c = c[0:1]
                             candidates += [
                                 Beam(
                                     c,
