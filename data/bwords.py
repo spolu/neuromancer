@@ -59,8 +59,8 @@ def load_1bwords_data(
         with open(path, 'r') as f:
             for l in f:
                 train_set.append(process_line(l))
-        done += 10
-        if done == 1:
+        done += 1
+        if done == 10:
             break
 
     done = 0
