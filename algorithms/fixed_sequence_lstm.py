@@ -133,7 +133,7 @@ class FixedSequenceLSTM:
         if self.train_loader is None:
             self.train_loader = DataLoader(
                 self.corpus.train_set(),
-                batch_size=16, shuffle=True,
+                batch_size=8, shuffle=True,
             )
 
         for i, (sequence, target) in enumerate(self.train_loader):
@@ -157,7 +157,7 @@ class FixedSequenceLSTM:
 
             self.optimizer.step()
 
-            if i % 10 == 0:
+            if i % 500 == 0:
                 print(
                     ("STEP {} avg/min/max L {:.6f} {:.6f} {:.6f}").
                     format(
@@ -170,7 +170,7 @@ class FixedSequenceLSTM:
                 sys.stdout.flush()
                 loss_meter_inter = Meter()
 
-            if (i+1) % 100 == 0:
+            if (i+1) % 10000 == 0:
                 test_loss = self.batch_test()
                 self.policy.train()
                 if test_loss < self.best_test_loss:
