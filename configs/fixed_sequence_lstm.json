@@ -1,0 +1,14 @@
+{
+  "algorithm": "fixed_sequence_lstm",
+  "cuda": true,
+  "seed": 1,
+
+  "sequence_length_max": 256,
+  "grad_norm_max": 4.0,
+
+  "layer_count": 4,
+  "hidden_size": 512,
+  "learning_rate": 0.001,
+
+  "beam_size": 8
+}

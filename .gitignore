@@ -1,0 +1,5 @@
+__pycache__
+fetch/credentials.json
+fetch/client_secret.json
+*.data
+*.raw
