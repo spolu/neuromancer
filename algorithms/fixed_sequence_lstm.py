@@ -323,19 +323,10 @@ class FixedSequenceLSTM:
 
             for b in beams:
                 print("{} {:.4f}".format(
-                    b.prediction, b.probability + 0.05 * len(b.prediction),
+                    b.prediction, b.probability + 0.1 * len(b.prediction),
                 ))
 
-            return beams[0].prediction
-
-            # for i in range(length):
-            #     output, hiddens = self.policy(current.unsqueeze(1), hiddens)
-            #     topv, topi = output.topk(1)
-            #     ix = topi[0][0][0].item()
-            #     if ix == 0:
-            #         break
-
-            #     letter = self.ix_to_char[ix]
-            #     prediction += letter
-
-            #     (current, _) = self.input_target_for_message(letter)
+            return (
+                beams[0].prediction,
+                beams[0].probability + 0.1 * len(beams[0].prediction),
+            )

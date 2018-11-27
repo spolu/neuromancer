@@ -22,8 +22,13 @@ def predict():
     prefix = request.args.get('prefix')
     prefix = prefix[-_cfg.get('sequence_length_max')-32:]
 
+    print("PREFIX: {}".format(prefix))
+
+    prediction, score = _algorithm.infer(prefix)
+
     return jsonify({
-        'prediction': _algorithm.infer(prefix, 32),
+        'prediction': prediction,
+        'score': score,
     })
 
 
