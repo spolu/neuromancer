@@ -37,8 +37,8 @@ var prediction = "";
 var show_prediction = (prediction) => {
   hide_prediction()
   p = get_position()
-  console.log("FOOBAR")
-  console.log($(p.anchor))
+  // console.log("FOOBAR")
+  // console.log($(p.anchor))
   $(p.anchor).replaceWith(p.text+'<span class="prediction">FOO</span>')
 }
 
@@ -54,7 +54,7 @@ var hide_prediction = () => {
     if (evt.keyCode == 32 && evt.shiftKey) {
       prefix = p.text.substr(0, p.col);
 
-      $.get("/predict/" + prefix, (data) => {
+      $.get("/predict?prefix=" + prefix, (data) => {
         prediction = data['prediction']
 
         path = p.path

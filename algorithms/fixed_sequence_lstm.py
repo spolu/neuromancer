@@ -30,8 +30,8 @@ class LSTMPolicy(nn.Module):
         self.config = config
 
         self.lstm = nn.LSTM(
-            self.charset_size, self.hidden_size,
-            num_layers=self.layer_count, bias=True
+            self.charset_size, self.hidden_size, num_layers=self.layer_count,
+            bias=True
         )
         self.fc1 = nn.Linear(self.hidden_size, self.charset_size)
 
@@ -93,6 +93,8 @@ class FixedSequenceLSTM:
             self,
             d: CorpusDictionary,
     ) -> None:
+        self.dict = d
+
         self.policy = LSTMPolicy(
             self.config, d.charset_size(),
         ).to(self.device)
@@ -146,11 +148,11 @@ class FixedSequenceLSTM:
             )
 
         for i, (sequence, target) in enumerate(self.train_loader):
-            predictions, _ = self.policy(sequence)
+            predictions, _ = self.policy(sequence.transpose(0, 1))
 
             loss = self.loss(
                 predictions.view(-1, predictions.size(2)),
-                target.view(-1),
+                target.transpose(0, 1).view(-1),
             )
 
             loss_meter_total.update(loss.item())
@@ -221,11 +223,11 @@ class FixedSequenceLSTM:
             )
 
         for i, (sequence, target) in enumerate(self.test_loader):
-            predictions, _ = self.policy(sequence)
+            predictions, _ = self.policy(sequence.transpose(0, 1))
 
             loss = self.loss(
                 predictions.view(-1, predictions.size(2)),
-                target.view(-1),
+                target.transpose(0, 1).view(-1),
             )
 
             loss_meter.update(loss.item())
@@ -251,9 +253,13 @@ class FixedSequenceLSTM:
         with torch.no_grad():
             h = None
             if len(m) > 1:
-                (sequence, _) = self.corpus.train_set.input_target(m[:-1])
+                (sequence, _) = self.dict.input_target(m[:-1])
+                sequence = sequence[:len(m)-1]
                 _, h = self.policy(sequence.unsqueeze(1))
-            (c, _) = self.corpus.input_target(m[-1:])
+            (c, _) = self.dict.input_target(m[-1:])
+            c = c[0]
+
+            import pdb; pdb.set_trace()
 
             # TODO(stan): fix c, sequence is not the right legnth anymore
 

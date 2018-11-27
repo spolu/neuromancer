@@ -36,9 +36,7 @@ def run(args):
             )
 
     if cfg.get('algorithm') == 'fixed_sequence_lstm':
-        algorithm = FixedSequenceLSTM(
-            cfg, args.save_dir, args.load_dir,
-        )
+        algorithm = FixedSequenceLSTM(cfg, args.save_dir, args.load_dir)
     assert algorithm is not None
 
     algorithm.initialize_training(corpus)
