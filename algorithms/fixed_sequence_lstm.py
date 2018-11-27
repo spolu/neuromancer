@@ -5,7 +5,7 @@ import collections
 import torch.nn as nn
 import torch.optim as optim
 
-from data.corpus import Corpus
+from data.corpus import Corpus, CorpusDictionary
 
 from utils import Meter, Config
 
@@ -70,7 +70,6 @@ class FixedSequenceLSTM:
     def __init__(
             self,
             config: Config,
-            corpus: Corpus,
             save_dir: str = None,
             load_dir: str = None,
     ):
@@ -81,7 +80,6 @@ class FixedSequenceLSTM:
         self.beam_size = config.get('beam_size')
 
         self.config = config
-        self.corpus = corpus
         self.train_loader = None
         self.test_loader = None
         self.save_dir = save_dir
@@ -91,8 +89,12 @@ class FixedSequenceLSTM:
 
         self.best_test_loss = 999999.99
 
+    def initialize(
+            self,
+            d: CorpusDictionary,
+    ) -> None:
         self.policy = LSTMPolicy(
-            self.config, self.corpus.dict().charset_size(),
+            self.config, d.charset_size(),
         ).to(self.device)
 
         self.optimizer = optim.Adam(
@@ -121,6 +123,13 @@ class FixedSequenceLSTM:
                         self.load_dir + "/optimizer.pt", map_location='cpu',
                     ),
                 )
+
+    def initialize_training(
+            self,
+            corpus: Corpus,
+    ) -> None:
+        self.corpus = corpus
+        self.initialize(self.corpus.dict())
 
     def batch_train(
             self,

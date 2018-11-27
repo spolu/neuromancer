@@ -1,4 +1,5 @@
 import argparse
+import json
 import os.path
 import random
 import signal
@@ -26,11 +27,21 @@ def run(args):
 
     corpus = load_1bwords_data(cfg, '1bwords/train', '1bwords/test')
 
+    if args.save_dir:
+        with open(args.save_dir + "/dictionary.out", 'w') as out:
+            json.dump(dict(corpus.dict()), out)
+            print(
+                "Saving dictionary: save_dir={}".
+                format(args.save_dir)
+            )
+
     if cfg.get('algorithm') == 'fixed_sequence_lstm':
         algorithm = FixedSequenceLSTM(
-            cfg, corpus, args.save_dir, args.load_dir,
+            cfg, args.save_dir, args.load_dir,
         )
     assert algorithm is not None
+
+    algorithm.initialize_training(corpus)
 
     while True:
         algorithm.batch_train()
