@@ -64,8 +64,9 @@ if __name__ == "__main__":
     parser.add_argument(
         '--load_dir', type=str, help="path to saved policies directory",
     )
-
-    parser.add_argument('--cuda', type=str2bool, help="config override")
+    parser.add_argument(
+        '--cuda', type=str2bool, help="config override"
+    )
 
     args = parser.parse_args()
 

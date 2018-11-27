@@ -10,7 +10,7 @@ from flask import Flask
 from flask import jsonify
 from flask import request
 
-from utils import Config
+from utils import Config, str2bool
 
 _app = Flask(__name__)
 _algorithm = None
@@ -45,11 +45,16 @@ if __name__ == "__main__":
     parser.add_argument(
         '--load_dir', type=str, help="path to saved policies directory"
     )
+    parser.add_argument(
+        '--cuda', type=str2bool, help="config override"
+    )
 
     args = parser.parse_args()
 
     _cfg = Config(args.config_path)
-    _cfg.override('cuda', False)
+
+    if args.cuda is not None:
+        _cfg.override('cuda', args.cuda)
 
     if _cfg.get('algorithm') == 'fixed_sequence_lstm':
         _algorithm = FixedSequenceLSTM(_cfg, None, args.load_dir)

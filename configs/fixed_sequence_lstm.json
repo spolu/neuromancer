@@ -10,5 +10,5 @@
   "hidden_size": 512,
   "learning_rate": 0.001,
 
-  "beam_size": 8
+  "beam_size": 4
 }
