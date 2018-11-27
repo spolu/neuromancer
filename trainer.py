@@ -5,7 +5,7 @@ import signal
 import sys
 import torch
 
-from data.gmail import load_gmail_data
+from data.bwords import load_1bwords_data
 
 from algorithms import FixedSequenceLSTM
 
@@ -24,7 +24,7 @@ def run(args):
     if cfg.get('cuda'):
         torch.cuda.manual_seed(cfg.get('seed'))
 
-    corpus = load_gmail_data(cfg, 'gmail.data')
+    corpus = load_1bwords_data(cfg, '1bwords/train', '1bwords/test')
 
     if cfg.get('algorithm') == 'fixed_sequence_lstm':
         algorithm = FixedSequenceLSTM(
